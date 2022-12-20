@@ -9,7 +9,7 @@ namespace HotelApi.Controllers
     public class OrderController : ControllerBase
     {
         private readonly ILogger<OrderController> _logger;
-      
+        static List<Order> orders = new List<Order>();
         public OrderController(ILogger<OrderController> logger)
         {
             
@@ -19,29 +19,24 @@ namespace HotelApi.Controllers
         [HttpGet(Name = "GetOrder")]
         public IEnumerable<Order> Get()
         {
-            return Enumerable.Range(1, 5).Select(index => new Order
-            {
-                _user = new Models.User(),
-                _room = new Models.Room(),
-                _spa = new Models.Spa(),
-                _menu = new Models.Menu()
-
-            })
-          .ToArray();
+            return orders;
         }
+     
         [HttpPost]
         public void Post([FromBody] Order r)
         {
+            orders.Add(r);
         }
         [HttpPut]
-        public void Put([FromBody] Order r)
+        public void Put(int id, [FromBody] Order r)
         {
+            orders[id] = r;
         }
         [HttpDelete("{id}")]
         public void Delete(Int32 Id)
         {
+           orders.RemoveAt(Id);
         }
-    }
-    
+    }   
 }
 
