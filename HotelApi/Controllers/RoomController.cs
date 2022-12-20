@@ -1,4 +1,5 @@
-﻿using HotelApi.Models;
+﻿
+using HotelApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelApi.Controllers
@@ -8,7 +9,7 @@ namespace HotelApi.Controllers
     public class RoomController : ControllerBase
     {
         private readonly ILogger<RoomController> _logger;
-
+       
         public RoomController(ILogger<RoomController> logger)
         {
             _logger = logger;
@@ -19,17 +20,23 @@ namespace HotelApi.Controllers
         {
             return Enumerable.Range(1, 5).Select(index => new Room
             {
-                categori = "All", 
+               
                 price = 150, 
                 number= 1,
                 count = 2
-               
-    })
+
+                //    // получаем объекты из бд и выводим на консоль
+                //    var rooms = db.Rooms.ToList();
+                //return rooms;
+            })
             .ToArray(); 
         }
+
+     
         [HttpPost]
         public void Post([FromBody] Room r)
         {
+        
         }
         [HttpPut]
         public void Put([FromBody] Room r)
