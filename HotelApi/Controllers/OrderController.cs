@@ -29,6 +29,18 @@ namespace HotelApi.Controllers
             })
           .ToArray();
         }
+        [HttpPost]
+        public void Post([FromBody] Order r)
+        {
+        }
+        [HttpPut]
+        public void Put([FromBody] Order r)
+        {
+        }
+        [HttpDelete("{id}")]
+        public void Delete(Int32 Id)
+        {
+        }
     }
     
 }
