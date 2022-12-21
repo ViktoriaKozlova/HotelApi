@@ -1,6 +1,7 @@
 ﻿
-using HotelApi.Models;
+
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace HotelApi.Controllers
 {
@@ -9,7 +10,7 @@ namespace HotelApi.Controllers
     public class RoomController : ControllerBase
     {
         private readonly ILogger<RoomController> _logger;
-       
+        PostgresContext db = new PostgresContext();
         public RoomController(ILogger<RoomController> logger)
         {
             _logger = logger;
@@ -18,34 +19,66 @@ namespace HotelApi.Controllers
         [HttpGet(Name = "GetRoom")]
         public IEnumerable<Room> Get()
         {
-            return Enumerable.Range(1, 5).Select(index => new Room
-            {
-               
-                price = 150, 
-                number= 1,
-                count = 2
-
-                //    // получаем объекты из бд и выводим на консоль
-                //    var rooms = db.Rooms.ToList();
-                //return rooms;
-            })
-            .ToArray(); 
+            var rooms = db.Rooms.ToList();
+                return (IEnumerable<Room>)rooms;
         }
 
      
         [HttpPost]
         public void Post([FromBody] Room r)
         {
-        
+            db.Rooms.AddRange(r);
+                db.SaveChanges();
+            
         }
+
+
+
         [HttpPut]
-        public void Put([FromBody] Room r)
+        public async Task<ActionResult<Room>> Put(Room i)
         {
+            if (i == null)
+            {
+                return BadRequest();
+            }
+            if (!db.Rooms.Any(x => x.Id == i.Id))
+            {
+                return NotFound();
+            }
+
+            db.Update(i);
+            await db.SaveChangesAsync();
+            return Ok(i);
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
         [HttpDelete("{id}")]
-        public void Delete(Int32 Id)
+        public async Task<ActionResult<Room>> Delete(int id)
         {
+            Room rooms = db.Rooms.FirstOrDefault(x => x.Id == id);
+            if (rooms == null)
+            {
+                return NotFound();
+            }
+            db.Rooms.Remove(rooms);
+            await db.SaveChangesAsync();
+            return Ok(rooms);
         }
     }
 }
+
+
+
+
 

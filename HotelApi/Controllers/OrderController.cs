@@ -1,5 +1,4 @@
 
-using HotelApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelApi.Controllers
@@ -9,7 +8,7 @@ namespace HotelApi.Controllers
     public class OrderController : ControllerBase
     {
         private readonly ILogger<OrderController> _logger;
-        static List<Order> orders = new List<Order>();
+        PostgresContext db = new PostgresContext();
         public OrderController(ILogger<OrderController> logger)
         {
             
@@ -17,26 +16,50 @@ namespace HotelApi.Controllers
         }
 
         [HttpGet(Name = "GetOrder")]
+       
         public IEnumerable<Order> Get()
         {
-            return orders;
+            var Orders = db.Orders.ToList();
+            return (IEnumerable<Order>)Orders;
+
         }
-     
+
+
         [HttpPost]
         public void Post([FromBody] Order r)
         {
-            orders.Add(r);
+          db.Orders.AddRange(r);
+            db.SaveChanges();
+
         }
+     
         [HttpPut]
-        public void Put(int id, [FromBody] Order r)
+        public async Task<ActionResult<Order>> Put(Order i)
         {
-            orders[id] = r;
+            if (i == null)
+            {
+                return BadRequest();
+            }
+            if (!db.Orders.Any(x => x.Id == i.Id))
+            {
+                return NotFound();
+            }
+
+            db.Update(i);
+            await db.SaveChangesAsync();
+            return Ok(i);
         }
         [HttpDelete("{id}")]
-        public void Delete(Int32 Id)
+        public async Task<ActionResult<Order>> Delete(int id)
         {
-           orders.RemoveAt(Id);
+            Order Orders = db.Orders.FirstOrDefault(x => x.Id == id);
+            if (Orders == null)
+            {
+                return NotFound();
+            }
+            db.Orders.Remove(Orders);
+            await db.SaveChangesAsync();
+            return Ok(Orders);
         }
-    }   
+    }
 }
-
