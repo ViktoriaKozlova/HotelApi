@@ -13,5 +13,5 @@ public partial class Room
 
     public int Count { get; set; }
 
-    public virtual ICollection<Order> Orders { get; } = new List<Order>();
+  //  public virtual ICollection<Order> Orders { get; } = new List<Order>();
 }

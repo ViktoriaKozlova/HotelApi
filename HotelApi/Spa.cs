@@ -11,5 +11,5 @@ public partial class Spa
 
     public int Price { get; set; }
 
-    public virtual ICollection<Order> Orders { get; } = new List<Order>();
+  //  public virtual ICollection<Order> Orders { get; } = new List<Order>();
 }

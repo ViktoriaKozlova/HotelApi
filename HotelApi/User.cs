@@ -11,7 +11,8 @@ public partial class User
 
     public string Email { get; set; } = null!;
 
+    
     public string Password { get; set; } = null!;
 
-    public virtual ICollection<Order> Orders { get; } = new List<Order>();
+   // public virtual ICollection<Order> Orders { get; } = new List<Order>();
 }
